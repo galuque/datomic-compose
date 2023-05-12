@@ -84,7 +84,7 @@ services:
         condition: service_started
       transactor:
         condition: service_started
-      datomic_db_init:
+      datomic-db-init:
         condition: service_completed_successfully
     volumes:
       - ./files/peer-server.sh:/opt/datomic/peer-server.sh
