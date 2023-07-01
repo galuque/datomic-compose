@@ -44,12 +44,12 @@ services:
       - datomic-transactor-logs:/opt/datomic/logs
     networks:
       - datomic-network
-    # healthcheck:
-    #   test: ["CMD", "curl", "http://localhost:9999/health"]
-    #   interval: 30s
-    #   timeout: 30s
-    #   retries: 5
-    #   start_period: 10s
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:9999/health"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 10s
     restart: always
     entrypoint: /opt/datomic/bin/transactor -Xmx4g -Xms4g /opt/datomic/config/sql-transactor.properties
     depends_on:
