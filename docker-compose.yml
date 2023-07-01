@@ -79,6 +79,12 @@ services:
       - ./files/peer-server.sh:/opt/datomic/peer-server.sh
     networks:
       - datomic-network
+    healthcheck:
+      test: ["CMD", "curl", "-k", "https://localhost:8998/health"]
+      interval: 30s
+      timeout: 30s
+      retries: 5
+      start_period: 10s
     restart: always
     entrypoint: bash /opt/datomic/peer-server.sh
     depends_on:
