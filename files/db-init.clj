@@ -6,8 +6,10 @@
   (let [halt? (atom false)]
     (loop []
       (try
-        (d/create-database uri)
-        (println "Database created successfully")
+        (let [created? (d/create-database uri)]
+          (if created?
+            (println "Database created successfully")
+            (println "Database already exists")))
         (reset! halt? true)
         (catch Exception _e
           (println "Failed to create database, retrying in 5 seconds")
