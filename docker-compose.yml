@@ -32,6 +32,7 @@ services:
         condition: service_started
 
   transactor:
+    image: datomic:1.0.6735-java17 
     build: 
       context: ./images/datomic/
       dockerfile: Dockerfile
@@ -59,9 +60,7 @@ services:
         condition: service_started
 
   datomic-db-init:
-    build: 
-      context: ./images/datomic/
-      dockerfile: Dockerfile
+    image: datomic:1.0.6735-java17 
     volumes:
       - ./files/db-init.clj:/opt/datomic/db-init.clj
     networks:
@@ -69,17 +68,11 @@ services:
     restart: on-failure:1
     entrypoint: /opt/datomic/bin/run /opt/datomic/db-init.clj
     depends_on:
-      postgres:
-        condition: service_healthy
-      memcached:
-        condition: service_started
       transactor:
-        condition: service_started
+        condition: service_healthy
 
   peer-server:
-    build: 
-      context: ./images/datomic/
-      dockerfile: Dockerfile
+    image: datomic:1.0.6735-java17 
     ports:
       - 8998:8998
     volumes:
@@ -89,19 +82,11 @@ services:
     restart: always
     entrypoint: bash /opt/datomic/peer-server.sh
     depends_on:
-      postgres:
-        condition: service_healthy
-      memcached:
-        condition: service_started
-      transactor:
-        condition: service_started
       datomic-db-init:
         condition: service_completed_successfully
 
   console:
-    build: 
-      context: ./images/datomic/
-      dockerfile: Dockerfile
+    image: datomic:1.0.6735-java17 
     ports:
       - 8080:8080
     networks:
@@ -109,12 +94,6 @@ services:
     restart: always
     entrypoint: /opt/datomic/bin/console -p 8080 sql 'datomic:sql://?jdbc:postgresql://postgres:5432/datomic?user=datomic&password=datomic'
     depends_on:
-      postgres:
-        condition: service_healthy
-      memcached:
-        condition: service_started
-      transactor:
-        condition: service_started
       datomic-db-init:
         condition: service_completed_successfully
 
