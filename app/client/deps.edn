@@ -1,0 +1,12 @@
+{:paths ["src"]
+
+ :deps {org.clojure/clojure    {:mvn/version "1.11.1"}
+        com.datomic/client-pro {:mvn/version "1.0.76"}}
+
+ :aliases
+ {:repl
+  {:extra-deps {nrepl/nrepl       {:mvn/version "1.0.0"}
+                cider/cider-nrepl {:mvn/version "0.31.0"}}
+   :main-opts  ["-m" "nrepl.cmdline"
+                "--middleware" "[cider.nrepl/cider-middleware]"
+                "--interactive"]}}}

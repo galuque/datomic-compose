@@ -1,5 +1,0 @@
-{:paths ["src"]
-
- :deps {org.clojure/clojure {:mvn/version "1.11.1"}
-        com.datomic/peer {:mvn/version "1.0.6726"}
-        org.postgresql/postgresql {:mvn/version "42.6.0"}}}
