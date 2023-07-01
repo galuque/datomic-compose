@@ -1,9 +1,9 @@
-FROM amazoncorretto:11
+FROM amazoncorretto:17
 
 ARG DATOMIC_CONFIG
 ENV DATOMIC_CONFIG=$DATOMIC_CONFIG
 
-ARG DATOMIC_VERSION=1.0.6726
+ARG DATOMIC_VERSION=1.0.6735
 
 RUN yum install -y unzip && yum clean all
 
