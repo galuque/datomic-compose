@@ -10,7 +10,7 @@ services:
       - 5432:5432
     volumes:
       - ./files/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./.data/pg:/var/lib/postgresql/data
+      - datomic-storage-data:/var/lib/postgresql/data
     networks:
       - datomic-network
     healthcheck:
@@ -41,7 +41,7 @@ services:
       - 4334:4334
     volumes:
       - ./files/sql-transactor.properties:/opt/datomic/config/sql-transactor.properties
-      - ./.data/logs:/opt/datomic/logs
+      - datomic-transactor-logs:/opt/datomic/logs
     networks:
       - datomic-network
     # healthcheck:
@@ -124,3 +124,4 @@ networks:
 
 volumes:
   datomic-storage-data:
+  datomic-transactor-logs:
