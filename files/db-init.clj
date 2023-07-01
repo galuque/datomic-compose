@@ -8,10 +8,12 @@
       (try
         (d/create-database uri)
         (println "Database created successfully")
-        (swap! halt? not)
+        (reset! halt? true)
         (catch Exception _e
           (println "Failed to create database, retrying in 5 seconds")
           (Thread/sleep 5000)))
-      (when-not @halt? (recur)))))
+      (if @halt? 
+        (System/exit 0)
+        (recur)))))
 
 (create-datomic-db uri)
