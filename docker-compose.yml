@@ -36,13 +36,12 @@ services:
     build: 
       context: ./images/datomic/
       dockerfile: Dockerfile
-      args:
-        DATOMIC_CONFIG: /opt/datomic/config/sql-transactor.properties 
     ports:
       - 4334:4334
     volumes:
-      - ./files/sql-transactor.properties:/opt/datomic/config/sql-transactor.properties
       - datomic-transactor-logs:/opt/datomic/logs
+    configs:
+      - transactor.properties
     networks:
       - datomic-network
     healthcheck:
@@ -52,7 +51,6 @@ services:
       retries: 5
       start_period: 10s
     restart: always
-    entrypoint: /opt/datomic/bin/transactor -Xmx4g -Xms4g /opt/datomic/config/sql-transactor.properties
     depends_on:
       postgres:
         condition: service_healthy
@@ -102,6 +100,10 @@ services:
     depends_on:
       datomic-db-init:
         condition: service_completed_successfully
+
+configs:
+  transactor.properties:
+    file: ./files/sql-transactor.properties
 
 networks:
   datomic-network:
