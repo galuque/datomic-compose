@@ -122,7 +122,7 @@ Again, this will start a repl with the client app running. You can connnect to t
 
 If you executed the code of peer app before, you should see the same data in the client app.
 
-## Chanhing the transactor configuration
+## Changing the transactor configuration
 
 If you want to change the transactor configuration, you can do it in the `files/sql-transactor.properties` file.
 
