@@ -4,17 +4,22 @@ The Datomic team recently [changed the license of the database](https://blog.dat
 
 This let's devolopers use the pro version of Datomic without a license fee and without registration.
 
-This repo provides a docker compose file that set ups a Datomic system.
+This repo provides a docker compose file that set ups a Datomic system with the pro version, so you can use it for development or testing out the database.
 
-The architecture is described [here](https://docs.datomic.com/pro/overview/architecture.html)
+It uses a SQL storage service, backed by a Postgres database, and a memcached service for caching.
 
-It set's up a postgres database as a storage service, a datomic transactor, a peer server, a [console](https://docs.datomic.com/pro/other-tools/console.html), and a memcached service.
+The datomic architecture is described [here](https://docs.datomic.com/pro/overview/architecture.html)
 
-There are also two folders, `peer` and `client`.
+A great video explaining the architecture is [Deconstructing the Database](https://www.infoq.com/presentations/Deconstructing-Database/)
 
-In the `peer` folder there is a minimal `deps.edn` project to connect to the running transactor. This is a Peer App Process: Application code that uses the datomic peer library embdedded in the same process.
+Besides the storage and cache services the compose file sets up a datomic transactor, a peer server, and a [console](https://docs.datomic.com/pro/other-tools/console.html)
 
-In the `client` folder there is another minimal `deps.edn` project to connect to the running peer server. It only uses the datomic client library.
+## Requirements
+
+- [Docker](https://docs.docker.com/engine/install/)
+- [Clojure](https://clojure.org/guides/install_clojure) (for running the apps)
+
+## Running it
 
 To start it:
 
@@ -34,7 +39,21 @@ memcached:1.6-bullseye    datomic-compose-memcached-1
 postgres:15-bullseye      datomic-compose-postgres-1
 ```
 
-## What does it do?
+## Stopping it
+
+To stop it:
+
+```shell
+docker compose down
+```
+
+If you want to remove the volumes:
+
+```shell
+docker compose down -v
+```
+
+## What does the compose file do?
 
 - Set up a Postgres database on port `5432` with:
     - User and password: datomic/datomic
@@ -71,7 +90,15 @@ memcached=memcached:11211
 /opt/datomic/bin/run -m datomic.console -p 8080 dev datomic:dev://localhost:8998/
 ```
 
-## Running the peer app
+## Sample apps
+
+There are two folders with minimal clojure projects, `peer` and `client`.
+
+In the `peer` folder there is a minimal `deps.edn` project to connect to the running transactor. This is a Peer App Process: Application code that uses the datomic peer library embdedded in the same process.
+
+In the `client` folder there is another minimal `deps.edn` project to connect to the running peer server. It only uses the datomic client library.
+
+### Running the peer app
 
 To run the peer app:
 
@@ -82,7 +109,7 @@ clojure -M:repl
 
 This will start a repl with the peer app running. You can connnect to that repl from your editor and evaluate the code in the `app/peer/src/datomic_compose/peer.clj` file.
 
-## Running the client app
+### Running the client app
 
 To run the client app:
 
@@ -94,21 +121,6 @@ clojure -M:repl
 Again, this will start a repl with the client app running. You can connnect to that repl from your editor and evaluate the code in the `app/client/src/datomic_compose/client.clj` file.
 
 If you executed the code of peer app before, you should see the same data in the client app.
-
-
-## Stopping it
-
-To stop it:
-
-```shell
-docker compose down
-```
-
-If you want to remove the volumes:
-
-```shell
-docker compose down -v
-```
 
 ## Chanhing the transactor configuration
 
