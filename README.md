@@ -109,3 +109,23 @@ If you want to remove the volumes:
 ```shell
 docker compose down -v
 ```
+
+## Chanhing the transactor configuration
+
+If you want to change the transactor configuration, you can do it in the `files/sql-transactor.properties` file.
+
+The `docker-compose.yml` is configured has the `configs` properties to use that file in the transactor service, like this:
+
+```yaml
+    transactor:
+    ...
+    configs:
+        - transactor.properties
+    ...
+
+configs:
+    transactor.properties:
+        file: ./files/sql-transactor.properties
+```
+
+See the docker documentation on [top level configs](https://docs.docker.com/compose/compose-file/08-configs/) and [service configs](https://docs.docker.com/compose/compose-file/05-services/#configs) for more information.
