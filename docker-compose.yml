@@ -36,10 +36,17 @@ services:
     build: 
       context: ./images/datomic/
       dockerfile: Dockerfile
+    environment:
+        - JVM_OPTS=-Ddatomic.metricsCallback=io.github.galuque.datomic.jmx.metrics/callback
+                   -javaagent:/opt/datomic/jmx_prometheus_javaagent-0.19.0.jar=9010:/opt/datomic/jmx_exporter.yaml
     ports:
       - 4334:4334
+      - 9010:9010
     volumes:
       - datomic-transactor-logs:/opt/datomic/logs
+      - ./jars/datomic-jmx-metrics-0.1.5.jar:/opt/datomic/lib/datomic-jmx-metrics-0.1.5.jar
+      - ./jars/jmx_prometheus_javaagent-0.19.0.jar:/opt/datomic/jmx_prometheus_javaagent-0.19.0.jar
+      - ./files/jmx_exporter.yaml:/opt/datomic/jmx_exporter.yaml
     configs:
       - transactor.properties
     networks:
@@ -101,6 +108,38 @@ services:
       datomic-db-init:
         condition: service_completed_successfully
 
+  prometheus:
+    image: prom/prometheus:v2.45.0
+    restart: unless-stopped
+    volumes:
+      - ./files/prometheus.yaml:/etc/prometheus/prometheus.yaml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yaml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    ports:
+      - 9090:9090
+    networks:
+      - datomic-network
+    depends_on:
+      transactor:
+        condition: service_healthy
+
+  grafana:
+    image: grafana/grafana:10.0.1
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - datomic-network
+    restart: always
+
 configs:
   transactor.properties:
     file: ./files/sql-transactor.properties
@@ -112,3 +151,5 @@ networks:
 volumes:
   datomic-storage-data:
   datomic-transactor-logs:
+  prometheus_data:
+  grafana_data:
