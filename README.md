@@ -90,6 +90,22 @@ memcached=memcached:11211
 /opt/datomic/bin/run -m datomic.console -p 8080 dev datomic:dev://localhost:8998/
 ```
 
+### Monitoring
+
+In this branch the `docker-compose-monitoring.yml` file sets up a [Prometheus](https://prometheus.io/) server and a [Grafana](https://grafana.com/) server too. 
+
+To see the metrics in grafana it sets up the transactor to:
+
+1. Export it's metrics to the runnig JVMS's JMX server. This is done with the [datomic JMX metrics](https://github.com/galuque/datomic-jmx-metrics/) library. (disclaimer: I worte it for this demo). The jar for version `v0.1.5` is in the `jars` folder.
+
+2. Use the Prometheus [JMX exporter](https://github.com/prometheus/jmx_exporter) to export the metrics to Prometheus. The jar for version `v0.19.0` is in the `jars` folder.
+
+With all the services running you can go to `localhost:3000` to see the Grafana dashboard. The default user and password are `admin` and `admin`.
+
+In there you can configure a Prometheus data source with the url `http://prometheus:9090`
+
+TODO: Add some pre loaded dashboards
+
 ## Sample apps
 
 There are two folders with minimal clojure projects, `peer` and `client`.
