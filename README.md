@@ -6,7 +6,11 @@ This let's devolopers use the pro version of Datomic without a license fee and w
 
 This repo provides a docker compose file that set ups a Datomic system with the pro version, so you can use it for development or testing out the database.
 
-It uses a SQL storage service, backed by a Postgres database, and a memcached service for caching.
+I started it as a way of learning how to use Datomic, and then I keep wonderinng "what should I add next to make it more like a production system?". And here we are.
+
+I'm sharing it in case it's useful for someone else who's looking to learn Datomic or want's to try self hosting it. If you have any suggestions or improvements, please let me know.
+
+The system uses a SQL storage service, backed by a Postgres database, and a memcached service for caching.
 
 The datomic architecture is described [here](https://docs.datomic.com/pro/overview/architecture.html)
 
